@@ -1,0 +1,166 @@
+unit Unit5;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Imaging.jpeg,
+  Vcl.ExtCtrls, Vcl.Imaging.pngimage;
+
+type
+  TForm5 = class(TForm)
+    ImageBackGround: TImage;
+    LabelChoose: TLabel;
+    LabelYour: TLabel;
+    LabelCar: TLabel;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    ImageLocation: TImage;
+    ImgMenu: TImage;
+    Image2: TImage;
+    Image5: TImage;
+    Image3: TImage;
+    Image6: TImage;
+    Image4: TImage;
+    Image7: TImage;
+    ImgBugatti: TImage;
+    ImgCitroen: TImage;
+    Image11: TImage;
+    ImgFrameBugatti: TImage;
+    ImgFrameCitroen: TImage;
+    ImgFrameDelorean: TImage;
+    procedure Image2Click(Sender: TObject);
+    procedure Image5Click(Sender: TObject);
+    procedure Image3Click(Sender: TObject);
+    procedure Image6Click(Sender: TObject);
+    procedure Image4Click(Sender: TObject);
+    procedure Image7Click(Sender: TObject);
+    procedure ImgMenuClick(Sender: TObject);
+    procedure ImageLocationClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form5: TForm5;
+
+implementation
+
+{$R *.dfm}
+
+uses Unit4, Unit6;
+
+procedure TForm5.ImageLocationClick(Sender: TObject);
+begin
+  Form6.Show;
+  Form5.Hide;
+end;
+
+procedure TForm5.Image2Click(Sender: TObject);
+begin
+  Image2.Visible := False;
+  Image5.Visible := True;
+  if Image5.Visible = True then
+  begin
+    ImgBugatti.Visible := True;
+    ImgBugatti.Picture.LoadFromFile('car-1.png');
+    ImgFrameBugatti.Visible := True;
+    ImgFrameBugatti.Picture.LoadFromFile('Рамка-Bugatti.png');
+    Image6.Visible := False;
+    Image3.Visible := True;
+    Image7.Visible := False;
+    Image4.Visible := True;
+  end;
+  if ImgBugatti.Visible = True then
+  begin
+    ImgFrameCitroen.Visible := False;
+    ImgFrameDelorean.Visible := False;
+    ImgCitroen.Visible := False;
+    Image11.Visible := False;
+  end;
+end;
+
+procedure TForm5.Image3Click(Sender: TObject);
+begin
+  Image3.Visible := False;
+  Image6.Visible := True;
+  if Image6.Visible = True then
+  begin
+    ImgCitroen.Visible := True;
+    ImgCitroen.Picture.LoadFromFile('car-2.png');
+    ImgFrameCitroen.Visible := True;
+    ImgFrameCitroen.Picture.LoadFromFile('Рамка-Citroen.png');
+    Image5.Visible := False;
+    Image2.Visible := True;
+    Image7.Visible := False;
+    Image4.Visible := True;
+  end;
+  if ImgCitroen.Visible = True then
+  begin
+    ImgFrameBugatti.Visible := False;
+    ImgFrameDelorean.Visible := False;
+    ImgBugatti.Visible := False;
+    Image11.Visible := False;
+  end;
+end;
+
+procedure TForm5.Image4Click(Sender: TObject);
+begin
+  Image4.Visible := False;
+  Image7.Visible := True;
+  if Image7.Visible = True then
+  begin
+    Image11.Visible := True;
+    Image11.Picture.LoadFromFile('car-3.png');
+    ImgFrameDelorean.Visible := True;
+    ImgFrameDelorean.Picture.LoadFromFile('Рамка-Delorean.png');
+    Image6.Visible := False;
+    Image3.Visible := True;
+    Image5.Visible := False;
+    Image2.Visible := True;
+  end;
+  if Image11.Visible = True then
+  begin
+    ImgFrameBugatti.Visible := False;
+    ImgFrameCitroen.Visible := False;
+    ImgBugatti.Visible := False;
+    ImgCitroen.Visible := False;
+  end;
+
+end;
+
+procedure TForm5.Image5Click(Sender: TObject);
+begin
+  Image5.Visible := False;
+  Image2.Visible := True;
+  ImgBugatti.Visible := False;
+  ImgFrameBugatti.Visible := False;
+  ImgFrameCitroen.Visible := False;
+  ImgFrameDelorean.Visible := False;
+end;
+
+procedure TForm5.Image6Click(Sender: TObject);
+begin
+  Image6.Visible := False;
+  Image3.Visible := True;
+  ImgCitroen.Visible := False;
+end;
+
+procedure TForm5.Image7Click(Sender: TObject);
+begin
+  Image7.Visible := False;
+  Image4.Visible := True;
+  Image11.Visible := False;
+end;
+
+procedure TForm5.ImgMenuClick(Sender: TObject);
+begin
+  Form4.Show;
+  Form5.Hide;
+end;
+
+end.

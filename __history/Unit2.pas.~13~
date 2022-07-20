@@ -1,0 +1,73 @@
+unit Unit2;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Data.DB, Data.Win.ADODB;
+
+type
+  TFormAutorisation = class(TForm)
+    ADOConnection1: TADOConnection;
+    EditLogin: TEdit;
+    EditPassword: TEdit;
+    ButtonEnter: TButton;
+    ButtonRegistration: TButton;
+    ADODataSet1: TADODataSet;
+    DataSource1: TDataSource;
+    Label1: TLabel;
+    procedure ButtonRegistrationClick(Sender: TObject);
+    procedure ButtonEnterClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FormAutorisation: TFormAutorisation;
+
+implementation
+
+{$R *.dfm}
+
+uses Unit3, Unit1;
+
+procedure TFormAutorisation.ButtonEnterClick(Sender: TObject);
+var
+  LogPass: Array of String;
+  i,j,Count: integer;
+  Result:string;
+begin
+  SetLength(LogPass, 800);
+  ADODataSet1.Active := True;
+  ADODataSet1.First;
+
+  for i := 0 to ADODataSet1.RecordCount - 1 do  //обработка данных логина и пароля пользователя
+  begin                                         //запись данных в массив
+    LogPass[i] := ADODataSet1.FieldValues['UserLogin']+' '+ADODataSet1.FieldValues['UserPassword'];
+  ADODataSet1.Next;
+  Inc(Count);
+  end;
+
+
+Result:=Trim(EditLogin.Text)+' '+Trim(EditPassword.Text);
+
+  for j := 0 to Count do    //проверка на наличие данных в массиве
+  begin
+    if Result = logPass[j] then
+    begin
+    FormGame.ShowModal;
+  end
+  else
+  Label1.Caption:='Wrong Login or Password';
+  end;
+end;
+
+procedure TFormAutorisation.ButtonRegistrationClick(Sender: TObject);
+begin
+  FormRegistration.ShowModal;
+end;
+
+end.

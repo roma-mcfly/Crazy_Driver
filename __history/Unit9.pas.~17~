@@ -1,0 +1,365 @@
+unit Unit9;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Data.DB, Data.Win.ADODB,
+  Vcl.ExtCtrls, Vcl.Imaging.pngimage;
+
+type
+  TForm9 = class(TForm)
+    TimerOpen: TTimer;
+    TimerClose: TTimer;
+    EditLogin: TEdit;
+    EditPassword: TEdit;
+    EditAnswer: TEdit;
+    Panel1: TPanel;
+    ADOTable1: TADOTable;
+    Panel3: TPanel;
+    Question: TComboBox;
+    BackGround: TImage;
+    EditLog: TEdit;
+    EditPas: TEdit;
+    ImgEnter: TImage;
+    ImgRegistration: TImage;
+    ImgRestore: TImage;
+    ImgRegister: TImage;
+    Panel4: TPanel;
+    EditForget: TEdit;
+    Memo2: TMemo;
+    ImgExit: TImage;
+    ImgOK: TImage;
+    ImgBack: TImage;
+    ImageBack1: TImage;
+    procedure ButtonregClick(Sender: TObject);
+    procedure TimerOpenTimer(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure ButtonRegistrationClick(Sender: TObject);
+    procedure TimerCloseTimer(Sender: TObject);
+    procedure ImgEnterClick(Sender: TObject);
+    procedure ImgRegistrationClick(Sender: TObject);
+    procedure ImgRestoreClick(Sender: TObject);
+    procedure ImgExitClick(Sender: TObject);
+    procedure ImgRegisterClick(Sender: TObject);
+    procedure ImgOKClick(Sender: TObject);
+    procedure ImgBackClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form9: TForm9;
+  clos: Boolean;
+  kol: Integer;
+
+implementation
+
+{$R *.dfm}
+
+uses Unit4;
+
+procedure TForm9.ButtonRegistrationClick(Sender: TObject);
+var
+  chek: Boolean;
+begin
+  ADOTable1.Open;
+  if (EditLogin.Text <> '') and (EditPassword.Text <> '') and
+    (EditAnswer.Text <> '') and
+    ((Question.ItemIndex = 0) or (Question.ItemIndex = 1) or
+    (Question.ItemIndex = 2)) then
+
+  begin
+    ADOTable1.First;
+    chek := true;
+    while not(ADOTable1.Eof) do
+    begin
+      if ADOTable1.Fields[1].AsString = EditLogin.Text then
+      begin
+        showmessage('User with this login already exists');
+        EditLogin.clear;
+        chek := false;
+      end
+      else
+        ADOTable1.Next;
+    end;
+    if chek = true then
+    begin
+      ImgEnter.Visible := true;
+      ImgRestore.Visible := true;
+      ImgRegistration.Visible := true;
+      ADOTable1.Last;
+      showmessage('You have successfully registered');
+      TimerClose.Enabled := true;
+      ADOTable1.append;
+      ADOTable1.Fields[1].AsString := EditLogin.Text;
+      ADOTable1.Fields[2].AsString := EditPassword.Text;
+      if Question.ItemIndex = 0 then
+        ADOTable1.Fields[3].AsString := 'The name of your first teacher';
+      if Question.ItemIndex = 1 then
+        ADOTable1.Fields[3].AsString := 'Your childhood nickname';
+      if Question.ItemIndex = 2 then
+        ADOTable1.Fields[3].AsString := 'Password of your bank card :D';
+      ADOTable1.Fields[4].AsString := EditAnswer.Text;
+      ADOTable1.Fields[5].AsString := '0';
+      ADOTable1.Post;
+      EditLogin.clear;
+      EditPassword.clear;
+      EditAnswer.clear;
+    end;
+  end
+  else
+    showmessage('Fill in all the fields');
+  ADOTable1.Close;
+end;
+
+procedure TForm9.ButtonregClick(Sender: TObject);
+begin
+  TimerOpen.Enabled := true;
+  Panel3.Visible := true;
+  ImgEnter.Visible := false;
+  ImgRestore.Visible := false;
+end;
+
+procedure TForm9.FormCreate(Sender: TObject);
+begin
+  kol := 0;
+end;
+
+procedure TForm9.ImgExitClick(Sender: TObject);
+begin
+  Form9.Close;
+end;
+
+procedure TForm9.ImgOKClick(Sender: TObject);
+var
+  chek: Boolean;
+begin
+  ADOTable1.Open;
+  chek := false;
+  ADOTable1.First;
+  while not(ADOTable1.Eof) do
+  begin
+    if ADOTable1.Fields[1].AsString = EditLog.Text then
+    begin
+      if EditForget.Text = ADOTable1.Fields[4].AsString then
+      begin
+        showmessage('Your password is: ' + ADOTable1.Fields[2].AsString);
+        EditPas.clear;
+        EditPas.Text := ADOTable1.Fields[2].AsString;
+        TimerClose.Enabled := true;
+        ImgEnter.Visible := true;
+        ImgRegistration.Visible := true;
+        ImgRestore.Visible := true;
+        chek := true;
+        break
+      end
+      else
+        ADOTable1.Next;
+    end
+    else
+      ADOTable1.Next;
+  end;
+  if chek = false then
+  begin
+    showmessage('You entered a wrong answer');
+    EditForget.clear;
+  end;
+  ADOTable1.Close;
+end;
+
+procedure TForm9.ImgBackClick(Sender: TObject);
+begin
+  TimerClose.Enabled := true;
+  ImgEnter.Visible := true;
+  ImgRestore.Visible := true;
+  ImgRegistration.Visible := true;
+  EditLogin.clear;
+  EditPassword.clear;
+  EditAnswer.clear;
+end;
+
+procedure TForm9.ImgEnterClick(Sender: TObject);
+var
+  chek: Boolean;
+begin
+  chek := false;
+  if (EditLog.Text = '') and (EditPas.Text = '') then
+    showmessage('Fill in all the fields')
+  else
+  begin
+    ADOTable1.Open;
+    ADOTable1.First;
+    while not(ADOTable1.Eof) do
+      if ADOTable1.Fields[1].AsString = EditLog.Text then
+      begin
+        chek := true;
+        Form4.LabelUser.Caption := EditLog.Text;
+        if ADOTable1.Fields[2].AsString = EditPas.Text then
+        begin
+          if ADOTable1.Fields[5].AsString = '0' then
+          begin
+            Form4.Show;
+            Form9.Visible := false;
+            Form4.LabelUser.Caption := EditLog.Text;
+            Form4.LabelScoreNum.Caption := ADOTable1.Fields[6].AsString;
+            break;
+          end
+          else
+          begin
+            Form4.Show;
+            Form9.Visible := false;
+            break;
+          end;
+        end
+        else
+        begin
+          showmessage('The password you entered is not correct');
+          EditPas.clear;
+          break;
+        end;
+      end
+      else
+        ADOTable1.Next;
+    if chek = false then
+      showmessage('User with this login does not exist')
+  end;
+end;
+
+procedure TForm9.ImgRegisterClick(Sender: TObject);
+var
+  chek: Boolean;
+begin
+  ADOTable1.Open;
+  if (EditLogin.Text <> '') and (EditPassword.Text <> '') and
+    (EditAnswer.Text <> '') and
+    ((Question.ItemIndex = 0) or (Question.ItemIndex = 1) or
+    (Question.ItemIndex = 2)) then
+
+  begin
+    ADOTable1.First;
+    chek := true;
+    while not(ADOTable1.Eof) do
+    begin
+      if ADOTable1.Fields[1].AsString = EditLogin.Text then
+      begin
+        showmessage('User with this login already exists');
+        EditLogin.clear;
+        chek := false;
+      end
+      else
+        ADOTable1.Next;
+    end;
+    if chek = true then
+    begin
+      ImgEnter.Visible := true;
+      ImgRestore.Visible := true;
+      ImgRegistration.Visible := true;
+      ADOTable1.Last;
+      showmessage('You have successfully registered');
+      TimerClose.Enabled := true;
+      ADOTable1.append;
+      ADOTable1.Fields[1].AsString := EditLogin.Text;
+      ADOTable1.Fields[2].AsString := EditPassword.Text;
+      ADOTable1.Fields[6].AsInteger := 0;
+      if Question.ItemIndex = 0 then
+        ADOTable1.Fields[3].AsString := 'The name of your first teacher';
+      if Question.ItemIndex = 1 then
+        ADOTable1.Fields[3].AsString := 'Your childhood nickname';
+      if Question.ItemIndex = 2 then
+        ADOTable1.Fields[3].AsString := 'Password of your bank card :D';
+      ADOTable1.Fields[4].AsString := EditAnswer.Text;
+      ADOTable1.Fields[5].AsString := '0';
+      ADOTable1.Post;
+      EditLogin.clear;
+      EditPassword.clear;
+      EditAnswer.clear;
+    end;
+  end
+  else
+    showmessage('Fill in all the fields');
+  ADOTable1.Close;
+end;
+
+procedure TForm9.ImgRegistrationClick(Sender: TObject);
+begin
+  Panel4.Visible := false;
+  TimerOpen.Enabled := true;
+  Panel3.Visible := true;
+  ImgEnter.Visible := false;
+  ImgRestore.Visible := false;
+end;
+
+procedure TForm9.ImgRestoreClick(Sender: TObject);
+var
+  chek: Boolean;
+begin
+  chek := false;
+  if EditLog.Text = '' then
+    showmessage('Password recovery question: ')
+  else
+  begin
+    ADOTable1.Open;
+    ADOTable1.First;
+    while not(ADOTable1.Eof) do
+    begin
+      if ADOTable1.Fields[1].AsString = EditLog.Text then
+      begin
+        chek := true;
+        break;
+      end
+      else
+        ADOTable1.Next;
+    end;
+    if chek = false then
+      showmessage('User with this login does not exist')
+    else if MessageDlg('Do you want to reset your password?', MtConfirmation,
+      [mbYes, mbNo], 0) = mrYes then
+    begin
+      TimerOpen.Enabled := true;
+      Panel4.Visible := true;
+      ImgRestore.Visible := false;
+      ImgRegistration.Visible := false;
+      ImgEnter.Visible := false;
+      while not(ADOTable1.Eof) do
+      begin
+        if EditLog.Text = ADOTable1.Fields[1].AsString then
+        begin
+          Memo2.Lines.Add('Password recovery question: ');
+          Memo2.Lines.Add(ADOTable1.Fields[3].AsString);
+          break
+        end
+        else
+          ADOTable1.Next;
+      end;
+      ADOTable1.Close;
+    end;
+  end;
+end;
+
+procedure TForm9.TimerCloseTimer(Sender: TObject);
+begin
+  if Form9.ClientWidth <= 225 then
+    TimerClose.Enabled := false
+  else
+  begin
+    Form9.ClientWidth := Form9.ClientWidth - 5;
+    ImgExit.left := ImgExit.left - 5;
+  end;
+end;
+
+procedure TForm9.TimerOpenTimer(Sender: TObject);
+begin
+  if Form9.ClientWidth >= 600 then
+    TimerOpen.Enabled := false
+  else
+  begin
+    Form9.ClientWidth := Form9.ClientWidth + 5;
+    ImgExit.left := ImgExit.left + 5;
+  end;
+end;
+
+end.

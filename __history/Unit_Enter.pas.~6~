@@ -1,0 +1,342 @@
+unit Unit_Enter;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Data.DB, Data.Win.ADODB,
+  Vcl.ExtCtrls, Vcl.Imaging.pngimage, mmsystem, Vcl.ComCtrls;
+
+type
+  TForm_Enter = class(TForm)
+    TimerOpen: TTimer;
+    TimerClose: TTimer;
+    EditLogin: TEdit;
+    EditPassword: TEdit;
+    EditAnswer: TEdit;
+    Panel1: TPanel;
+    ADOTable1: TADOTable;
+    Panel3: TPanel;
+    Question: TComboBox;
+    BackGround: TImage;
+    EditLog: TEdit;
+    EditPas: TEdit;
+    ImgEnter: TImage;
+    ImgRegistration: TImage;
+    ImgRestore: TImage;
+    ImgRegister: TImage;
+    Panel4: TPanel;
+    EditForget: TEdit;
+    Memo2: TMemo;
+    ImgExit: TImage;
+    ImgOK: TImage;
+    ImgBack: TImage;
+    ImageBack1: TImage;
+    ImgLoading: TImage;
+    Panel2: TPanel;
+    TimerLoading: TTimer;
+    ProgressBarLoading: TProgressBar;
+    LabelLoading: TLabel;
+    LabelLoadingNum: TLabel;
+    LabelProcent: TLabel;
+    procedure TimerOpenTimer(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure TimerCloseTimer(Sender: TObject);
+    procedure ImgEnterClick(Sender: TObject);
+    procedure ImgRegistrationClick(Sender: TObject);
+    procedure ImgRestoreClick(Sender: TObject);
+    procedure ImgRegisterClick(Sender: TObject);
+    procedure ImgOKClick(Sender: TObject);
+    procedure ImgBackClick(Sender: TObject);
+    procedure TimerLoadingTimer(Sender: TObject);
+    procedure ImgExitClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form_Enter: TForm_Enter;
+  clos: Boolean;
+  kol, t: Integer;
+
+implementation
+
+{$R *.dfm}
+
+uses Unit_MainMenu;
+
+procedure TForm_Enter.FormCreate(Sender: TObject);
+begin
+  kol := 0;
+end;
+
+procedure TForm_Enter.ImgOKClick(Sender: TObject);
+var
+  chek: Boolean;
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  ADOTable1.Open;
+  chek := false;
+  ADOTable1.First;
+  while not(ADOTable1.Eof) do
+  begin
+    if ADOTable1.Fields[1].AsString = EditLog.Text then
+    begin
+      if EditForget.Text = ADOTable1.Fields[4].AsString then
+      begin
+        showmessage('Your password is: ' + ADOTable1.Fields[2].AsString);
+        EditPas.clear;
+        EditPas.Text := ADOTable1.Fields[2].AsString;
+        TimerClose.Enabled := true;
+        ImgEnter.Visible := true;
+        ImgRegistration.Visible := true;
+        ImgRestore.Visible := true;
+        chek := true;
+        break
+      end
+      else
+        ADOTable1.Next;
+    end
+    else
+      ADOTable1.Next;
+  end;
+  if chek = false then
+  begin
+    showmessage('You entered a wrong answer');
+    EditForget.clear;
+  end;
+  ADOTable1.Close;
+end;
+
+procedure TForm_Enter.ImgBackClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  TimerClose.Enabled := true;
+  ImgEnter.Visible := true;
+  ImgRestore.Visible := true;
+  ImgRegistration.Visible := true;
+  EditLogin.clear;
+  EditPassword.clear;
+  EditAnswer.clear;
+  Memo2.clear;
+end;
+
+procedure TForm_Enter.ImgEnterClick(Sender: TObject);
+var
+  chek: Boolean;
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  chek := false;
+  if (EditLog.Text = '') and (EditPas.Text = '') then
+    showmessage('Fill in all the fields')
+  else
+  begin
+    ADOTable1.Open;
+    ADOTable1.First;
+    while not(ADOTable1.Eof) do
+      if ADOTable1.Fields[1].AsString = EditLog.Text then
+      begin
+        chek := true;
+        Form_MainMenu.LabelUser.Caption := EditLog.Text;
+        if ADOTable1.Fields[2].AsString = EditPas.Text then
+        begin
+          if ADOTable1.Fields[5].AsString = '0' then
+          begin
+            Form_MainMenu.Show;
+            Form_Enter.Visible := false;
+            Form_MainMenu.LabelUser.Caption := EditLog.Text;
+            Form_MainMenu.LabelScoreNum.Caption := ADOTable1.Fields[6].AsString;
+            break;
+          end
+          else
+          begin
+            Form_MainMenu.Show;
+            Form_Enter.Visible := false;
+            break;
+          end;
+        end
+        else
+        begin
+          showmessage('The password you entered is not correct');
+          EditPas.clear;
+          break;
+        end;
+      end
+      else
+        ADOTable1.Next;
+    if chek = false then
+      showmessage('User with this login does not exist')
+  end;
+end;
+
+procedure TForm_Enter.ImgExitClick(Sender: TObject);
+begin
+  Form_Enter.Close;
+end;
+
+procedure TForm_Enter.ImgRegisterClick(Sender: TObject);
+var
+  chek: Boolean;
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  ADOTable1.Open;
+  if (EditLogin.Text <> '') and (EditPassword.Text <> '') and
+    (EditAnswer.Text <> '') and
+    ((Question.ItemIndex = 0) or (Question.ItemIndex = 1) or
+    (Question.ItemIndex = 2)) then
+
+  begin
+    ADOTable1.First;
+    chek := true;
+    while not(ADOTable1.Eof) do
+    begin
+      if ADOTable1.Fields[1].AsString = EditLogin.Text then
+      begin
+        showmessage('User with this login already exists');
+        EditLogin.clear;
+        chek := false;
+      end
+      else
+        ADOTable1.Next;
+    end;
+    if chek = true then
+    begin
+      ImgEnter.Visible := true;
+      ImgRestore.Visible := true;
+      ImgRegistration.Visible := true;
+      ADOTable1.Last;
+      showmessage('You have successfully registered');
+      TimerClose.Enabled := true;
+      ADOTable1.append;
+      ADOTable1.Fields[1].AsString := EditLogin.Text;
+      ADOTable1.Fields[2].AsString := EditPassword.Text;
+      ADOTable1.Fields[6].AsInteger := 0;
+      if Question.ItemIndex = 0 then
+        ADOTable1.Fields[3].AsString := 'The name of your first teacher';
+      if Question.ItemIndex = 1 then
+        ADOTable1.Fields[3].AsString := 'Your childhood nickname';
+      if Question.ItemIndex = 2 then
+        ADOTable1.Fields[3].AsString := 'Password of your bank card :D';
+      ADOTable1.Fields[4].AsString := EditAnswer.Text;
+      ADOTable1.Fields[5].AsString := '0';
+      ADOTable1.Post;
+      EditLogin.clear;
+      EditPassword.clear;
+      EditAnswer.clear;
+    end;
+  end
+  else
+    showmessage('Fill in all the fields');
+  ADOTable1.Close;
+end;
+
+procedure TForm_Enter.ImgRegistrationClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  Panel4.Visible := false;
+  TimerOpen.Enabled := true;
+  Panel3.Visible := true;
+  ImgEnter.Visible := false;
+  ImgRestore.Visible := false;
+  ImgRegistration.Visible := false;
+end;
+
+procedure TForm_Enter.ImgRestoreClick(Sender: TObject);
+var
+  chek: Boolean;
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  chek := false;
+  if EditLog.Text = '' then
+    showmessage('Password recovery question: ')
+  else
+  begin
+    ADOTable1.Open;
+    ADOTable1.First;
+    while not(ADOTable1.Eof) do
+    begin
+      if ADOTable1.Fields[1].AsString = EditLog.Text then
+      begin
+        chek := true;
+        break;
+      end
+      else
+        ADOTable1.Next;
+    end;
+    if chek = false then
+      showmessage
+        ('You can not restore pasword: user with this login does not exist')
+    else if MessageDlg('Do you want to reset your password?', MtConfirmation,
+      [mbYes, mbNo], 0) = mrYes then
+    begin
+      TimerOpen.Enabled := true;
+      Panel4.Visible := true;
+      ImgRegistration.Visible := false;
+      ImgRestore.Visible := false;
+      ImgEnter.Visible := false;
+      while not(ADOTable1.Eof) do
+      begin
+        if EditLog.Text = ADOTable1.Fields[1].AsString then
+        begin
+          Memo2.Lines.Add('Password recovery question: ');
+          Memo2.Lines.Add(ADOTable1.Fields[3].AsString);
+          break
+        end
+        else
+          ADOTable1.Next;
+      end;
+      ADOTable1.Close;
+    end;
+  end;
+end;
+
+procedure TForm_Enter.TimerCloseTimer(Sender: TObject);
+begin
+  if Form_Enter.ClientWidth <= 225 then
+    TimerClose.Enabled := false
+  else
+  begin
+    Form_Enter.ClientWidth := Form_Enter.ClientWidth - 5;
+    ImgExit.left := ImgExit.left - 5;
+  end;
+end;
+
+procedure TForm_Enter.TimerLoadingTimer(Sender: TObject);
+begin
+  ProgressBarLoading.Position := ProgressBarLoading.Position + 1;
+  inc(t);
+  if (t = 5) or (t = 10) or (t = 15) or (t = 20) or (t = 25) or (t = 30) or
+    (t = 35) or (t = 40) or (t = 45) or (t = 50) or (t = 55) or (t = 60) or
+    (t = 65) or (t = 70) or (t = 75) or (t = 80) or (t = 85) or (t = 90) or
+    (t = 95) or (t = 100) then
+  begin
+    LabelLoadingNum.Caption := inttostr(t);
+  end;
+
+  // LabelLoadingNum.Caption := inttostr(t);
+  if ProgressBarLoading.Position = ProgressBarLoading.Max then
+  begin
+    TimerLoading.Enabled := false;
+    ProgressBarLoading.Position := 0;
+    t := 0;
+    Panel2.Visible := false;
+    ImgLoading.Visible := false;
+    Form_MainMenu.MediaPlayer1.Play;
+  end;
+end;
+
+procedure TForm_Enter.TimerOpenTimer(Sender: TObject);
+begin
+  if Form_Enter.ClientWidth >= 600 then
+    TimerOpen.Enabled := false
+  else
+  begin
+    Form_Enter.ClientWidth := Form_Enter.ClientWidth + 5;
+    ImgExit.left := ImgExit.left + 5;
+  end;
+end;
+
+end.

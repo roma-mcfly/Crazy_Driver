@@ -1,0 +1,166 @@
+unit Unit5;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Imaging.jpeg,
+  Vcl.ExtCtrls, Vcl.Imaging.pngimage;
+
+type
+  TForm5 = class(TForm)
+    ImageBackGround: TImage;
+    LabelChoose: TLabel;
+    LabelYour: TLabel;
+    LabelCar: TLabel;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    ImageLocation: TImage;
+    ImgMenu: TImage;
+    Image2: TImage;
+    ImgClick1On: TImage;
+    Image3: TImage;
+    ImgClick2On: TImage;
+    Image4: TImage;
+    ImgClick3On: TImage;
+    ImgBugatti: TImage;
+    ImgCitroen: TImage;
+    ImgDelorean: TImage;
+    ImgFrameBugatti: TImage;
+    ImgFrameCitroen: TImage;
+    ImgFrameDelorean: TImage;
+    procedure Image2Click(Sender: TObject);
+    procedure ImgClick1OnClick(Sender: TObject);
+    procedure Image3Click(Sender: TObject);
+    procedure ImgClick2OnClick(Sender: TObject);
+    procedure Image4Click(Sender: TObject);
+    procedure ImgClick3OnClick(Sender: TObject);
+    procedure ImgMenuClick(Sender: TObject);
+    procedure ImageLocationClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form5: TForm5;
+
+implementation
+
+{$R *.dfm}
+
+uses Unit4, Unit6;
+
+procedure TForm5.ImageLocationClick(Sender: TObject);
+begin
+  Form6.Show;
+  Form5.Hide;
+end;
+
+procedure TForm5.Image2Click(Sender: TObject);
+begin
+  Image2.Visible := False;
+  ImgClick1On.Visible := True;
+  if ImgClick1On.Visible = True then
+  begin
+    ImgBugatti.Visible := True;
+    ImgBugatti.Picture.LoadFromFile('car-1.png');
+    ImgFrameBugatti.Visible := True;
+    ImgFrameBugatti.Picture.LoadFromFile('Рамка-Bugatti.png');
+    ImgClick2On.Visible := False;
+    Image3.Visible := True;
+    ImgClick3On.Visible := False;
+    Image4.Visible := True;
+  end;
+  if ImgBugatti.Visible = True then
+  begin
+    ImgFrameCitroen.Visible := False;
+    ImgFrameDelorean.Visible := False;
+    ImgCitroen.Visible := False;
+    ImgDelorean.Visible := False;
+  end;
+end;
+
+procedure TForm5.Image3Click(Sender: TObject);
+begin
+  Image3.Visible := False;
+  ImgClick2On.Visible := True;
+  if ImgClick2On.Visible = True then
+  begin
+    ImgCitroen.Visible := True;
+    ImgCitroen.Picture.LoadFromFile('car-2.png');
+    ImgFrameCitroen.Visible := True;
+    ImgFrameCitroen.Picture.LoadFromFile('Рамка-Citroen.png');
+    ImgClick1On.Visible := False;
+    Image2.Visible := True;
+    ImgClick3On.Visible := False;
+    Image4.Visible := True;
+  end;
+  if ImgCitroen.Visible = True then
+  begin
+    ImgFrameBugatti.Visible := False;
+    ImgFrameDelorean.Visible := False;
+    ImgBugatti.Visible := False;
+    ImgDelorean.Visible := False;
+  end;
+end;
+
+procedure TForm5.Image4Click(Sender: TObject);
+begin
+  Image4.Visible := False;
+  ImgClick3On.Visible := True;
+  if ImgClick3On.Visible = True then
+  begin
+    ImgDelorean.Visible := True;
+    ImgDelorean.Picture.LoadFromFile('car-3.png');
+    ImgFrameDelorean.Visible := True;
+    ImgFrameDelorean.Picture.LoadFromFile('Рамка-Delorean.png');
+    ImgClick2On.Visible := False;
+    Image3.Visible := True;
+    ImgClick1On.Visible := False;
+    Image2.Visible := True;
+  end;
+  if ImgDelorean.Visible = True then
+  begin
+    ImgFrameBugatti.Visible := False;
+    ImgFrameCitroen.Visible := False;
+    ImgBugatti.Visible := False;
+    ImgCitroen.Visible := False;
+  end;
+
+end;
+
+procedure TForm5.ImgClick1OnClick(Sender: TObject);
+begin
+  ImgClick1On.Visible := False;
+  Image2.Visible := True;
+  ImgBugatti.Visible := False;
+  ImgFrameBugatti.Visible := False;
+  ImgFrameCitroen.Visible := False;
+  ImgFrameDelorean.Visible := False;
+end;
+
+procedure TForm5.ImgClick2OnClick(Sender: TObject);
+begin
+  ImgClick2On.Visible := False;
+  Image3.Visible := True;
+  ImgCitroen.Visible := False;
+end;
+
+procedure TForm5.ImgClick3OnClick(Sender: TObject);
+begin
+  ImgClick3On.Visible := False;
+  Image4.Visible := True;
+  ImgDelorean.Visible := False;
+end;
+
+procedure TForm5.ImgMenuClick(Sender: TObject);
+begin
+  Form4.Show;
+  Form5.Hide;
+end;
+
+end.

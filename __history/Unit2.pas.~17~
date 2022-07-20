@@ -1,0 +1,84 @@
+unit Unit2;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Data.DB, Data.Win.ADODB;
+
+type
+  TFormAutorisation = class(TForm)
+    ADOConnection1: TADOConnection;
+    EditLogin: TEdit;
+    EditPassword: TEdit;
+    ButtonEnter: TButton;
+    ButtonRegistration: TButton;
+    ADODataSet1: TADODataSet;
+    DataSource1: TDataSource;
+    Label1: TLabel;
+    ADOQuery1: TADOQuery;
+    procedure ButtonRegistrationClick(Sender: TObject);
+    procedure ButtonEnterClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FormAutorisation: TFormAutorisation;
+
+implementation
+
+{$R *.dfm}
+
+uses Unit3, Unit1;
+
+procedure TFormAutorisation.ButtonEnterClick(Sender: TObject);
+begin
+  if (trim(EditLogin.Text)<>'') and (trim(EditPassword.Text)<>'') then begin
+    ADOQuery1.sql.text:='select count(*) from Users where login=:l and passowrd=:p';
+    ADOQuery1.parameters.parambyname('login').value:=EditLogin.Text;
+    ADOQuery1.parameters.parambyname('Password').value:=EditPassword.Text; // тут можно прикрутить шифрование что бы не хранить в базе пароль
+    ADOQuery1.active:=true;
+    if ADOQuery1.recordcount=1 then ... // все хорошо - пара нашлась
+    else Showmessage('ќшибка'); // или вообще не нашли, или нашли больше 1 пары
+  end else Showmessage('Ќе введены данные');
+end;
+{var
+  LogPass: Array of String;
+  i,j,Count: integer;
+  Result,Login,Password:string;
+begin
+  SetLength(LogPass, 800);
+  ADODataSet1.Active := True;
+  ADODataSet1.First;
+
+  for i := 0 to ADODataSet1.RecordCount - 1 do  //обработка данных логина и парол€ пользовател€
+  begin                                         //запись данных в массив
+    LogPass[i] := ADODataSet1.FieldValues['UserLogin']+' '+ADODataSet1.FieldValues['UserPassword'];
+  ADODataSet1.Next;
+  Inc(Count);
+  end;
+
+
+Result:=Trim(EditLogin.Text)+' '+Trim(EditPassword.Text);
+
+  for j := 0 to Count do    //проверка на наличие данных в массиве
+  begin
+    if Result = logPass[j] then
+    begin
+    FormGame.ShowModal;
+  end
+  else
+  Label1.Caption:='Wrong Login or Password';
+  end;
+end}
+
+procedure TFormAutorisation.ButtonRegistrationClick(Sender: TObject);
+begin
+  FormRegistration.ShowModal;
+end;
+
+end.

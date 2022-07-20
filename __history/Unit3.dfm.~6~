@@ -1,0 +1,170 @@
+object FormRegistration: TFormRegistration
+  Left = 0
+  Top = 0
+  Caption = 'Registration'
+  ClientHeight = 202
+  ClientWidth = 446
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object EditRegLogin: TEdit
+    Left = 24
+    Top = 24
+    Width = 121
+    Height = 21
+    TabOrder = 0
+    Text = 'Login'
+  end
+  object EditRegPassword: TEdit
+    Left = 24
+    Top = 51
+    Width = 121
+    Height = 21
+    PasswordChar = '*'
+    TabOrder = 1
+  end
+  object RadioGroup1: TRadioGroup
+    Left = 8
+    Top = 89
+    Width = 431
+    Height = 105
+    Caption = 'Personal Information'
+    TabOrder = 2
+  end
+  object EditRegName: TEdit
+    Left = 24
+    Top = 112
+    Width = 121
+    Height = 21
+    TabOrder = 3
+    Text = 'Name'
+  end
+  object ComboBoxRegSex: TComboBox
+    Left = 192
+    Top = 112
+    Width = 145
+    Height = 21
+    TabOrder = 4
+    Text = 'Sex'
+  end
+  object EditRedSurname: TEdit
+    Left = 24
+    Top = 139
+    Width = 121
+    Height = 21
+    TabOrder = 5
+    Text = 'Surname'
+  end
+  object EditRedLastName: TEdit
+    Left = 24
+    Top = 166
+    Width = 121
+    Height = 21
+    TabOrder = 6
+    Text = 'Last Name'
+  end
+  object DatePickerReg: TDatePicker
+    Left = 192
+    Top = 155
+    Width = 145
+    Date = 43576.000000000000000000
+    DateFormat = 'dd/MM/yyyy'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    TabOrder = 7
+  end
+  object ButtonRegReg: TButton
+    Left = 352
+    Top = 110
+    Width = 75
+    Height = 77
+    Caption = 'Registration'
+    TabOrder = 8
+    OnClick = ButtonRegRegClick
+  end
+  object ADOQuery1: TADOQuery
+    Connection = FormAutorisation.ADOConnection1
+    Parameters = <
+      item
+        Name = 'RegUserLogin'
+        Attributes = [paNullable]
+        DataType = ftWideString
+        NumericScale = 255
+        Precision = 255
+        Size = 510
+        Value = Null
+      end
+      item
+        Name = 'RegUserPassword'
+        Attributes = [paNullable]
+        DataType = ftWideString
+        NumericScale = 255
+        Precision = 255
+        Size = 510
+        Value = Null
+      end
+      item
+        Name = 'RegUserName'
+        Attributes = [paNullable]
+        DataType = ftString
+        NumericScale = 255
+        Precision = 255
+        Size = 510
+        Value = Null
+      end
+      item
+        Name = 'RegUserSurname'
+        Attributes = [paNullable]
+        DataType = ftString
+        NumericScale = 255
+        Precision = 255
+        Size = 510
+        Value = Null
+      end
+      item
+        Name = 'RegUserLastName'
+        Attributes = [paNullable]
+        DataType = ftString
+        NumericScale = 255
+        Precision = 255
+        Size = 510
+        Value = Null
+      end
+      item
+        Name = 'RegUserSex'
+        Attributes = [paNullable]
+        DataType = ftInteger
+        NumericScale = 255
+        Precision = 255
+        Size = 510
+        Value = Null
+      end
+      item
+        Name = 'RegUserDate'
+        Attributes = [paNullable]
+        DataType = ftDateTime
+        NumericScale = 255
+        Precision = 255
+        Value = Null
+      end>
+    SQL.Strings = (
+      
+        'INSERT INTO Users (UserLogin, UserPassword, UserName, UserSurnam' +
+        'e, UserLastName, UserSex, UserDate)'
+      
+        'Values(:RegUserLogin, :RegUserPassword, :RegUserName, :RegUserSu' +
+        'rname, :RegUserLastName, :RegUserSex, :RegUserDate)')
+    Left = 400
+    Top = 8
+  end
+end

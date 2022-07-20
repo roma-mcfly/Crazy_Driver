@@ -1,0 +1,290 @@
+unit Unit1;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Data.DB, Data.Win.ADODB,
+  Vcl.ExtCtrls, Unit2, Unit3;
+
+type
+  TForm1 = class(TForm)
+    EditLog: TEdit;
+    EditPas: TEdit;
+    ButtonEntry: TButton;
+    Buttonreg: TButton;
+    Buttonclose: TButton;
+    ButtonForgetPas: TButton;
+    TimerOpen: TTimer;
+    TimerClose: TTimer;
+    EditLogin: TEdit;
+    EditPassword: TEdit;
+    EditAnswer: TEdit;
+    ButtonRegistration: TButton;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    ADOTable1: TADOTable;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    EditForget: TEdit;
+    Question: TComboBox;
+    Memo2: TMemo;
+    procedure ButtonclosClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure ButtonregClick(Sender: TObject);
+    procedure TimerOpenTimer(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure ButtonRegistrationClick(Sender: TObject);
+    procedure TimerCloseTimer(Sender: TObject);
+    procedure ButtonEntryClick(Sender: TObject);
+    procedure ButtonForgetPasClick(Sender: TObject);
+    procedure EditForgetKeyPress(Sender: TObject; var Key: Char);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  clos: Boolean;
+  kol: Integer;
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm1.ButtonRegistrationClick(Sender: TObject);
+var
+  chek: Boolean;
+begin
+  ADOTable1.Open;
+  if (EditLogin.Text <> '') and (EditPassword.Text <> '') and
+    (EditAnswer.Text <> '') and
+    ((Question.ItemIndex = 0) or (Question.ItemIndex = 1) or
+    (Question.ItemIndex = 2)) then
+
+  begin
+    ADOTable1.First;
+    chek := true;
+    while not(ADOTable1.Eof) do
+    begin
+      if ADOTable1.Fields[1].AsString = EditLogin.Text then
+      begin
+        showmessage('Пользователь с таким логином уже существует.');
+        EditLogin.clear;
+        chek := false;
+      end
+      else
+        ADOTable1.Next;
+    end;
+    if chek = true then
+    begin
+      ButtonEntry.Enabled := true;
+      ButtonForgetPas.Enabled := true;
+      Buttonreg.Enabled := true;
+      ADOTable1.Last;
+      showmessage('Вы успещно зарегистрировались.');
+      TimerClose.Enabled := true;
+      ADOTable1.append;
+      ADOTable1.Fields[1].AsString := EditLogin.Text;
+      ADOTable1.Fields[2].AsString := EditPassword.Text;
+      if Question.ItemIndex = 0 then
+        ADOTable1.Fields[3].AsString := 'Девичья фамилия матери';
+      if Question.ItemIndex = 1 then
+        ADOTable1.Fields[3].AsString := 'Любимая футбольная команда';
+      if Question.ItemIndex = 2 then
+        ADOTable1.Fields[3].AsString := 'Кличка первой собаки';
+      ADOTable1.Fields[4].AsString := EditAnswer.Text;
+      ADOTable1.Fields[5].AsString := '0';
+      ADOTable1.Post;
+      EditLogin.clear;
+      EditPassword.clear;
+      EditAnswer.clear;
+    end;
+  end
+  else
+    showmessage('Заполните каждое поле.');
+  ADOTable1.Close;
+end;
+
+procedure TForm1.ButtonclosClick(Sender: TObject);
+begin
+  Form1.Close;
+end;
+
+procedure TForm1.ButtonEntryClick(Sender: TObject);
+var
+  chek: Boolean;
+begin
+  chek := false;
+  if (EditLog.Text = '') and (EditPas.Text = '') then
+    showmessage('Заполните поля для ввода.')
+  else
+  begin
+    ADOTable1.Open;
+    ADOTable1.First;
+    while not(ADOTable1.Eof) do
+      if ADOTable1.Fields[1].AsString = EditLog.Text then
+      begin
+        chek := true;
+        if ADOTable1.Fields[2].AsString = EditPas.Text then
+        begin
+          if ADOTable1.Fields[5].AsString = '0' then
+          begin
+            form3.Show;
+            Form1.visible := false;
+            break;
+          end
+          else
+          begin
+            form2.Show;
+            Form1.visible := false;
+            break;
+          end;
+        end
+        else
+        begin
+          showmessage('Введенный вами пароль не правильный.');
+          EditPas.clear;
+          break;
+        end;
+      end
+      else
+        ADOTable1.Next;
+    if chek = false then
+      showmessage('Пользователя с таким логином не существует.')
+  end;
+end;
+
+procedure TForm1.ButtonForgetPasClick(Sender: TObject);
+var
+  chek: Boolean;
+begin
+  chek := false;
+  if EditLog.Text = '' then
+    showmessage('Введите логин.')
+  else
+  begin
+    ADOTable1.Open;
+    ADOTable1.First;
+    while not(ADOTable1.Eof) do
+    begin
+      if ADOTable1.Fields[1].AsString = EditLog.Text then
+      begin
+        chek := true;
+        break;
+      end
+      else
+        ADOTable1.Next;
+    end;
+    if chek = false then
+      showmessage('Пользователя с таким логином не существует.')
+    else if MessageDlg('Вы хотите восстановить пароль? ', MtConfirmation,
+      [mbYes, mbNo], 0) = mrYes then
+    begin
+      TimerOpen.Enabled := true;
+      Panel4.visible := true;
+      ButtonForgetPas.Enabled := false;
+      Buttonreg.Enabled := false;
+      ButtonEntry.Enabled := false;
+      while not(ADOTable1.Eof) do
+      begin
+        if EditLog.Text = ADOTable1.Fields[1].AsString then
+        begin
+          Memo2.Lines.Add('Вопрос для восстановления пароля: ');
+          Memo2.Lines.Add(ADOTable1.Fields[3].AsString);
+          break
+        end
+        else
+          ADOTable1.Next;
+      end;
+      ADOTable1.Close;
+    end;
+  end;
+end;
+
+procedure TForm1.ButtonregClick(Sender: TObject);
+begin
+  Panel4.visible := false;
+  TimerOpen.Enabled := true;
+  Panel3.visible := true;
+  ButtonEntry.Enabled := false;
+  ButtonForgetPas.Enabled := false;
+end;
+
+procedure TForm1.EditForgetKeyPress(Sender: TObject; var Key: Char);
+var
+  chek: Boolean;
+begin
+  if Key = #13 then
+  begin
+    ADOTable1.Open;
+    chek := false;
+    ADOTable1.First;
+    while not(ADOTable1.Eof) do
+    begin
+      if ADOTable1.Fields[1].AsString = EditLog.Text then
+      begin
+        if EditForget.Text = ADOTable1.Fields[4].AsString then
+        begin
+          showmessage('Ваш пароль: ' + ADOTable1.Fields[2].AsString);
+          EditPas.clear;
+          EditPas.Text := ADOTable1.Fields[2].AsString;
+          TimerClose.Enabled := true;
+          ButtonEntry.Enabled := true;
+          Buttonreg.Enabled := true;
+          ButtonForgetPas.Enabled := true;
+          chek := true;
+          break
+        end
+        else
+          ADOTable1.Next;
+      end
+      else
+        ADOTable1.Next;
+    end;
+    if chek = false then
+    begin
+      showmessage('Вы ввели не правильный ответ');
+      EditForget.clear;
+    end;
+    ADOTable1.Close;
+  end;
+end;
+
+procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  if MessageDlg('Вы уверены? ', MtConfirmation, [mbYes, mbNo], 0) = mrNo then
+    Action := canone;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  kol := 0;
+end;
+
+procedure TForm1.TimerCloseTimer(Sender: TObject);
+begin
+  if Form1.ClientWidth <= 300 then
+    TimerClose.Enabled := false
+  else
+  begin
+    Form1.ClientWidth := Form1.ClientWidth - 5;
+    Buttonclose.left := Buttonclose.left - 5;
+  end;
+end;
+
+procedure TForm1.TimerOpenTimer(Sender: TObject);
+begin
+  if Form1.ClientWidth >= 750 then
+    TimerOpen.Enabled := false
+  else
+  begin
+    Form1.ClientWidth := Form1.ClientWidth + 5;
+    Buttonclose.left := Buttonclose.left + 5;
+  end;
+end;
+
+end.

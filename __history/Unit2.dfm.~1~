@@ -1,0 +1,55 @@
+object FormAutorisation: TFormAutorisation
+  Left = 0
+  Top = 0
+  Caption = 'Autorisation'
+  ClientHeight = 295
+  ClientWidth = 478
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object EditLogin: TEdit
+    Left = 104
+    Top = 48
+    Width = 203
+    Height = 21
+    TabOrder = 0
+  end
+  object EditPassword: TEdit
+    Left = 104
+    Top = 75
+    Width = 203
+    Height = 21
+    TabOrder = 1
+  end
+  object ButtonEnter: TButton
+    Left = 104
+    Top = 102
+    Width = 75
+    Height = 25
+    Caption = 'Enter'
+    TabOrder = 2
+  end
+  object ButtonRegistration: TButton
+    Left = 232
+    Top = 102
+    Width = 75
+    Height = 25
+    Caption = 'Registration'
+    TabOrder = 3
+  end
+  object ADOConnection1: TADOConnection
+    ConnectionString = 
+      'Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\admin\Desk' +
+      'top\'#1043#1054#1053#1050#1048'\Win32\Debug\Base6661.mdb;Persist Security Info=False'
+    Provider = 'Microsoft.Jet.OLEDB.4.0'
+    Left = 24
+    Top = 16
+  end
+end

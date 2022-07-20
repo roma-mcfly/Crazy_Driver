@@ -1,0 +1,71 @@
+unit Unit7;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Imaging.jpeg, Vcl.ExtCtrls,
+  Vcl.Imaging.pngimage, Vcl.StdCtrls, mmsystem;
+
+type
+  TForm7 = class(TForm)
+    ImageBackGround: TImage;
+    ImgSound: TImage;
+    LabelSoundOff: TLabel;
+    ImgMenu: TImage;
+    procedure ImgSoundClick(Sender: TObject);
+    procedure ImgMenuClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form7: TForm7;
+  MusicPlay: boolean;
+
+implementation
+
+{$R *.dfm}
+
+uses Unit4;
+
+procedure TForm7.ImgSoundClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  LabelSoundOff.Width := 170;
+  if MusicPlay = true then
+  begin
+    LabelSoundOff.Caption := 'Sound Off';
+    MusicPlay := false;
+    Form4.MediaPlayer1.Stop;
+    ImgSound.Picture.LoadFromFile('Images\ImgSoundOff.png');
+    exit;
+  end;
+  if MusicPlay = false then
+  begin
+    LabelSoundOff.Caption := 'Sound On';
+    MusicPlay := true;
+    Form4.MediaPlayer1.Play;
+    ImgSound.Picture.LoadFromFile('Images\ImgSoundON.png');
+    exit;
+  end;
+end;
+
+procedure TForm7.FormCreate(Sender: TObject);
+begin
+  LabelSoundOff.Width := 170;
+  MusicPlay := true;
+end;
+
+procedure TForm7.ImgMenuClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  Form4.Show;
+  Form7.Hide;
+end;
+
+end.

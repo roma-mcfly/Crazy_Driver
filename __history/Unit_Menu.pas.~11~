@@ -1,0 +1,122 @@
+unit Unit_Menu;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Imaging.pngimage, Vcl.ExtCtrls,
+  Vcl.StdCtrls, mmsystem;
+
+type
+  TForm_Menu = class(TForm)
+    ImgBackGround: TImage;
+    ImgMenu: TImage;
+    LabelMenu: TLabel;
+    ImgPlay: TImage;
+    LabelPlay: TLabel;
+    ImgClickSoundOn: TImage;
+    ImgClickSoundOff: TImage;
+    LabelSound: TLabel;
+    LabelReplay: TLabel;
+    ImgReplay: TImage;
+    LabelScore: TLabel;
+    ImgFrame: TImage;
+    LabelFinalScore: TLabel;
+    procedure ImgClickSoundOffClick(Sender: TObject);
+    procedure ImgClickSoundOnClick(Sender: TObject);
+    procedure ImgPlayClick(Sender: TObject);
+    procedure ImgMenuClick(Sender: TObject);
+    procedure ImgReplayClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form_Menu: TForm_Menu;
+  score, score2, a, a1, n, t, g, boomtimer: integer;
+  k: boolean;
+  m: boolean;
+  boom: boolean;
+
+implementation
+
+{$R *.dfm}
+
+// пофиксить музыку на рестарте
+uses Unit_Game, Unit_MainMenu;
+
+procedure TForm_Menu.ImgMenuClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  Form_MainMenu.Show;
+  Form_Menu.Hide;
+  Form_Game.Hide;
+  Form_Game.MediaPlayer1.Stop;
+  Form_MainMenu.MediaPlayer1.Play;
+  LabelSound.Caption := 'sound on';
+  ImgClickSoundOn.Visible := true;
+  ImgClickSoundOff.Visible := false;
+end;
+
+procedure TForm_Menu.ImgPlayClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  if Form_Game.ImgTank.Visible = true then
+  begin
+    Form_Game.Timer1.Enabled := true;
+    Form_Game.Timer3.Enabled := true;
+    Form_Game.TimerCarRed.Enabled := false;
+    Form_Game.TimerCarRedFast.Enabled := false;
+    Form_Game.TimerCarBlue.Enabled := false;
+    Form_Game.TimerRoad.Enabled := true;
+    Form_Game.TimerCoins.Enabled := false;
+    Form_Menu.Hide;
+  end;
+  if Form_Game.ImgTank.Visible = false then
+  begin
+    Form_Game.Timer1.Enabled := true;
+    Form_Game.Timer3.Enabled := true;
+    Form_Game.TimerCarRed.Enabled := true;
+    Form_Game.TimerCarRedFast.Enabled := true;
+    Form_Game.TimerCarBlue.Enabled := true;
+    Form_Game.TimerRoad.Enabled := true;
+    Form_Game.TimerCoins.Enabled := true;
+    Form_Menu.Hide;
+  end;
+end;
+
+procedure TForm_Menu.ImgReplayClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  Form_Game.BtnReplay.Click;
+  // Form_Game.MediaPlayer1.Play;
+end;
+
+procedure TForm_Menu.ImgClickSoundOnClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  Form_Game.MediaPlayer1.Stop;
+  ImgClickSoundOn.Visible := false;
+  ImgClickSoundOff.Visible := true;
+  if ImgClickSoundOff.Visible = true then
+  begin
+    LabelSound.Caption := 'sound off';
+  end;
+end;
+
+procedure TForm_Menu.ImgClickSoundOffClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  Form_Game.MediaPlayer1.Play;
+  ImgClickSoundOff.Visible := false;
+  ImgClickSoundOn.Visible := true;
+  if ImgClickSoundOn.Visible = true then
+  begin
+    LabelSound.Caption := 'sound on';
+  end;
+end;
+
+end.

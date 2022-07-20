@@ -1,0 +1,157 @@
+unit Unit8;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Imaging.pngimage, Vcl.ExtCtrls,
+  Vcl.StdCtrls, mmsystem;
+
+type
+  TForm8 = class(TForm)
+    ImgBackGround: TImage;
+    ImgMenu: TImage;
+    LabelMenu: TLabel;
+    ImgPlay: TImage;
+    LabelPlay: TLabel;
+    ImgClickSoundOn: TImage;
+    ImgClickSoundOff: TImage;
+    LabelSound: TLabel;
+    LabelReplay: TLabel;
+    ImgReplay: TImage;
+    LabelScore: TLabel;
+    ImgFrame: TImage;
+    LabelFinalScore: TLabel;
+    procedure ImgClickSoundOffClick(Sender: TObject);
+    procedure ImgClickSoundOnClick(Sender: TObject);
+    procedure ImgPlayClick(Sender: TObject);
+    procedure ImgMenuClick(Sender: TObject);
+    procedure ImgReplayClick(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form8: TForm8;
+  score, score2, a, a1, n, t, g, boomtimer: integer;
+  k: boolean;
+  m: boolean;
+  boom: boolean;
+
+implementation
+
+{$R *.dfm}
+
+uses Unit1, Unit4;
+
+procedure TForm8.ImgMenuClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  Form4.Show;
+  Form8.Hide;
+  Form1.Hide;
+  Form1.MediaPlayer1.Stop;
+  // Form1.ImgTank.Visible := false;
+  Form4.MediaPlayer1.Play;
+
+  // Form1.BtnReplay.Click;
+  // Form1.ImgPoliceCar.Top:= -220;
+end;
+
+procedure TForm8.ImgPlayClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  if Form1.ImgTank.Visible = true then
+  begin
+    Form1.Timer1.Enabled := true;
+    Form1.Timer2.Enabled := true;
+    Form1.Timer3.Enabled := true;
+    Form1.TimerCarRed.Enabled := false;
+    Form1.TimerCarRedFast.Enabled := false;
+    Form1.TimerCarBlue.Enabled := false;
+    Form1.TimerRoad.Enabled := true;
+    Form1.TimerCoins.Enabled := false;
+    Form8.Hide;
+  end;
+  if Form1.ImgTank.Visible = false then
+  begin
+    Form1.Timer1.Enabled := true;
+    Form1.Timer2.Enabled := true;
+    Form1.Timer3.Enabled := true;
+    Form1.TimerCarRed.Enabled := true;
+    Form1.TimerCarRedFast.Enabled := true;
+    Form1.TimerCarBlue.Enabled := true;
+    Form1.TimerRoad.Enabled := true;
+    Form1.TimerCoins.Enabled := true;
+    Form8.Hide;
+  end;
+end;
+
+procedure TForm8.ImgReplayClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  Form1.BtnReplay.Click;
+  Form1.MediaPlayer1.Play;
+end;
+
+procedure TForm8.ImgClickSoundOnClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  Form1.MediaPlayer1.Play;
+  ImgClickSoundOn.Visible := false;
+  ImgClickSoundOff.Visible := true;
+  if ImgClickSoundOff.Visible = true then
+  begin
+    LabelSound.Caption := 'sound off';
+  end;
+end;
+
+procedure TForm8.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+  begin
+    sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+    if Form1.ImgTank.Visible = true then
+    begin
+      Form1.Timer1.Enabled := true;
+      Form1.Timer2.Enabled := true;
+      Form1.Timer3.Enabled := true;
+      Form1.TimerCarRed.Enabled := false;
+      Form1.TimerCarRedFast.Enabled := false;
+      Form1.TimerCarBlue.Enabled := false;
+      Form1.TimerRoad.Enabled := true;
+      Form1.TimerCoins.Enabled := false;
+      Form8.Hide;
+    end;
+    if Form1.ImgTank.Visible = false then
+    begin
+      Form1.Timer1.Enabled := true;
+      Form1.Timer2.Enabled := true;
+      Form1.Timer3.Enabled := true;
+      Form1.TimerCarRed.Enabled := true;
+      Form1.TimerCarRedFast.Enabled := true;
+      Form1.TimerCarBlue.Enabled := true;
+      Form1.TimerRoad.Enabled := true;
+      Form1.TimerCoins.Enabled := true;
+      Form8.Hide;
+    end;
+  end;
+end;
+
+procedure TForm8.ImgClickSoundOffClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  Form1.MediaPlayer1.Stop;
+  ImgClickSoundOff.Visible := false;
+  ImgClickSoundOn.Visible := true;
+  if ImgClickSoundOn.Visible = true then
+  begin
+    LabelSound.Caption := 'sound on';
+  end;
+end;
+
+end.

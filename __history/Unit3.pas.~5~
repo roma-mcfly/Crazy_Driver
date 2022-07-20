@@ -1,0 +1,53 @@
+unit Unit3;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.WinXPickers,
+  Vcl.ExtCtrls, Data.DB, Data.Win.ADODB;
+
+type
+  TFormRegistration = class(TForm)
+    EditRegLogin: TEdit;
+    EditRegPassword: TEdit;
+    RadioGroup1: TRadioGroup;
+    EditRegName: TEdit;
+    ComboBoxRegSex: TComboBox;
+    EditRedSur: TEdit;
+    EditRedMiddleName: TEdit;
+    DatePickerReg: TDatePicker;
+    ButtonRegReg: TButton;
+    ADOQuery1: TADOQuery;
+    procedure ButtonRegRegClick(Sender: TObject);
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FormRegistration: TFormRegistration;
+
+implementation
+
+{$R *.dfm}
+
+uses Unit2;
+
+procedure TFormRegistration.ButtonRegRegClick(Sender: TObject);
+begin
+  if (EditRegLogin.Text <> '') and (EditRegPassword.Text <> '') then
+  begin
+  ADOQuery1.Parameters.ParamByName('RegUserLogin').Value:=EditRegLogin.Text;
+  ADOQuery1.Parameters.ParamByName('RegUserPassword').Value:=EditRegPassword.Text;
+  ADOQuery1.ExecSQL;
+  end;
+
+end;
+
+
+
+end.

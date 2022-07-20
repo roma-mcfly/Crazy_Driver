@@ -1,0 +1,437 @@
+unit Unit4;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.pngimage,
+  Vcl.StdCtrls, Vcl.MPlayer, mmsystem;
+
+type
+  TForm4 = class(TForm)
+    Timer1: TTimer;
+    ImgBackGround: TImage;
+    ImgPoliceCar: TImage;
+    ImgFlasher: TImage;
+    ImgDirtRight: TImage;
+    ImgDirtLeft: TImage;
+    ImageGarage: TImage;
+    ImgClickEasyOff: TImage;
+    ImgClickNormalOff: TImage;
+    ImgClickHardOff: TImage;
+    ImgClickEasyOn: TImage;
+    ImgClickNormalOn: TImage;
+    ImgClickHardOn: TImage;
+    LabelEasy: TLabel;
+    LabelNormal: TLabel;
+    LabelHard: TLabel;
+    ImgPlay: TImage;
+    LabelPlay: TLabel;
+    ImgExit: TImage;
+    LabelExit: TLabel;
+    LabelLocation: TLabel;
+    ImgAntenna1: TImage;
+    ImgAntenna2: TImage;
+    ImgSettings: TImage;
+    ImgLocation: TImage;
+    ImgCoin: TImage;
+    Timer2: TTimer;
+    LabelScoreNum: TLabel;
+    LabelUser: TLabel;
+    LabelUserText: TLabel;
+    LabelBestScore: TLabel;
+    ImgChangeUser: TImage;
+    LabelChange: TLabel;
+    LabelChUser: TLabel;
+    MediaPlayer1: TMediaPlayer;
+    procedure Timer1Timer(Sender: TObject);
+    procedure ImageGarageClick(Sender: TObject);
+    procedure ImgClickEasyOffClick(Sender: TObject);
+    procedure ImgClickEasyOnClick(Sender: TObject);
+    procedure ImgClickNormalOffClick(Sender: TObject);
+    procedure ImgClickNormalOnClick(Sender: TObject);
+    procedure ImgClickHardOffClick(Sender: TObject);
+    procedure ImgClickHardOnClick(Sender: TObject);
+    procedure ImgPlayClick(Sender: TObject);
+    procedure ImgExitClick(Sender: TObject);
+    procedure ImgSettingsClick(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure ImgLocationClick(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure ImgChangeUserClick(Sender: TObject);
+    procedure MediaPlayer1Notify(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form4: TForm4;
+  n, MusicPlayMenu: boolean;
+  k, g: integer;
+
+implementation
+
+{$R *.dfm}
+
+uses Unit5, Unit1, Unit6, Unit7, Unit9;
+
+procedure TForm4.FormCreate(Sender: TObject);
+begin
+  MusicPlayMenu := true;
+  k := 0;
+end;
+
+procedure TForm4.ImgClickEasyOnClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  ImgClickEasyOn.Visible := false;
+  ImgClickEasyOff.Visible := true;
+end;
+
+procedure TForm4.ImgClickNormalOnClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  ImgClickNormalOn.Visible := false;
+  ImgClickNormalOff.Visible := true;
+end;
+
+procedure TForm4.ImgClickHardOnClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  ImgClickHardOn.Visible := false;
+  ImgClickHardOff.Visible := true;
+end;
+
+procedure TForm4.ImgSettingsClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  Form7.Show;
+  Form4.Hide;
+end;
+
+procedure TForm4.MediaPlayer1Notify(Sender: TObject);
+begin
+  with MediaPlayer1 do
+    if NotifyValue = nvSuccessful then
+    begin
+      Notify := true;
+      Play;
+    end;
+end;
+
+procedure TForm4.ImgLocationClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  Form6.Show;
+  Form4.Hide;
+end;
+
+procedure TForm4.ImgPlayClick(Sender: TObject);
+begin
+  begin
+    Form1.ImgCarRed.Top := 1050;
+    Form1.ImgCarBlue.Top := 750;
+    Form1.ImgCarRedFast.Top := 900;
+    Form1.BtnReplay.Click;
+    MediaPlayer1.Stop;
+    sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+    Form1.MediaPlayer1.Play;
+    Form1.Show;
+    Form4.Hide;
+    Form1.Timer1.Enabled := true;
+    Form1.Timer2.Enabled := true;
+    Form1.Timer3.Enabled := true;
+    Form1.TimerCarRed.Enabled := true;
+    Form1.TimerCarRedFast.Enabled := true;
+    Form1.TimerCarBlue.Enabled := true;
+    Form1.TimerRoad.Enabled := true;
+    Form1.TimerCoinIcon.Enabled := true;
+    MusicPlayMenu := false;
+    MusicPlayGame := false;
+    if Form6.ImageSavannah.Visible = true then
+    begin
+      Form1.ImgRoad1.Picture.LoadFromFile('Images\ImgRoad-1.jpg');
+      Form1.ImgRoad2.Picture.LoadFromFile('Images\ImgRoad-1.jpg');
+    end;
+    if Form6.ImageDesert.Visible = true then
+    begin
+      Form1.ImgRoad1.Picture.LoadFromFile('Images\ImgRoad-2.jpg');
+      Form1.ImgRoad2.Picture.LoadFromFile('Images\ImgRoad-2.jpg');
+    end;
+    if Form6.ImageBelarus.Visible = true then
+    begin
+      Form1.ImgRoad1.Picture.LoadFromFile('Images\ImgRoad-3.jpg');
+      Form1.ImgRoad2.Picture.LoadFromFile('Images\ImgRoad-3.jpg');
+    end;
+    if Form5.ImgBugatti.Visible = true then
+    begin
+      Form1.ImgPlayer.Picture.LoadFromFile('Images\ImgBugatti.png');
+    end;
+    if Form5.ImgCitroen.Visible = true then
+    begin
+      Form1.ImgPlayer.Picture.LoadFromFile('Images\ImgCitroen.png');
+    end;
+    if Form5.ImgDelorean.Visible = true then
+    begin
+      Form1.ImgPlayer.Picture.LoadFromFile('Images\ImgDelorean.png');
+    end;
+  end;
+  if (Form4.ImgClickEasyOn.Visible = true) and
+    (Form4.ImgClickNormalOn.Visible = false) and
+    (Form4.ImgClickHardOn.Visible = false) then
+  begin
+    Form1.TimerRoad.Interval := 25;
+    Form1.TimerCarRed.Interval := 25;
+    Form1.TimerCarRedFast.Interval := 25;
+    Form1.TimerCarBlue.Interval := 25;
+    Form1.TimerPoliceCar.Interval := 25;
+  end;
+  if (Form4.ImgClickNormalOn.Visible = true) and
+    (Form4.ImgClickEasyOn.Visible = false) and
+    (Form4.ImgClickHardOn.Visible = false) then
+  begin
+    Form1.TimerRoad.Interval := 20;
+    Form1.TimerCarRed.Interval := 20;
+    Form1.TimerCarRedFast.Interval := 20;
+    Form1.TimerCarBlue.Interval := 20;
+    Form1.TimerPoliceCar.Interval := 20;
+  end;
+  if (Form4.ImgClickHardOn.Visible = true) and
+    (Form4.ImgClickEasyOn.Visible = false) and
+    (Form4.ImgClickNormalOn.Visible = false) then
+  begin
+    Form1.TimerRoad.Interval := 15;
+    Form1.TimerCarRed.Interval := 15;
+    Form1.TimerCarRedFast.Interval := 15;
+    Form1.TimerCarBlue.Interval := 15;
+    Form1.TimerPoliceCar.Interval := 15;
+  end;
+end;
+
+procedure TForm4.ImgExitClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  Form9.Close;
+end;
+
+procedure TForm4.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+  begin
+  Form1.ImgCarRed.Top := 1050;
+    Form1.ImgCarBlue.Top := 750;
+    Form1.ImgCarRedFast.Top := 900;
+    Form1.BtnReplay.Click;
+    MediaPlayer1.Stop;
+    sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+    Form1.MediaPlayer1.Play;
+    Form1.Show;
+    Form4.Hide;
+    Form1.Timer1.Enabled := true;
+    Form1.Timer2.Enabled := true;
+    Form1.Timer3.Enabled := true;
+    Form1.TimerCarRed.Enabled := true;
+    Form1.TimerCarRedFast.Enabled := true;
+    Form1.TimerCarBlue.Enabled := true;
+    Form1.TimerRoad.Enabled := true;
+    Form1.TimerCoinIcon.Enabled := true;
+    MusicPlayMenu := false;
+    MusicPlayGame := false;
+    if Form6.ImageSavannah.Visible = true then
+    begin
+      Form1.ImgRoad1.Picture.LoadFromFile('Images\ImgRoad-1.jpg');
+      Form1.ImgRoad2.Picture.LoadFromFile('Images\ImgRoad-1.jpg');
+    end;
+    if Form6.ImageDesert.Visible = true then
+    begin
+      Form1.ImgRoad1.Picture.LoadFromFile('Images\ImgRoad-2.jpg');
+      Form1.ImgRoad2.Picture.LoadFromFile('Images\ImgRoad-2.jpg');
+    end;
+    if Form6.ImageBelarus.Visible = true then
+    begin
+      Form1.ImgRoad1.Picture.LoadFromFile('Images\ImgRoad-3.jpg');
+      Form1.ImgRoad2.Picture.LoadFromFile('Images\ImgRoad-3.jpg');
+    end;
+    if Form5.ImgBugatti.Visible = true then
+    begin
+      Form1.ImgPlayer.Picture.LoadFromFile('Images\ImgBugatti.png');
+    end;
+    if Form5.ImgCitroen.Visible = true then
+    begin
+      Form1.ImgPlayer.Picture.LoadFromFile('Images\ImgCitroen.png');
+    end;
+    if Form5.ImgDelorean.Visible = true then
+    begin
+      Form1.ImgPlayer.Picture.LoadFromFile('Images\ImgDelorean.png');
+    end;
+  end;
+  if (Form4.ImgClickEasyOn.Visible = true) and
+    (Form4.ImgClickNormalOn.Visible = false) and
+    (Form4.ImgClickHardOn.Visible = false) then
+  begin
+    Form1.TimerRoad.Interval := 25;
+    Form1.TimerCarRed.Interval := 25;
+    Form1.TimerCarRedFast.Interval := 25;
+    Form1.TimerCarBlue.Interval := 25;
+    Form1.TimerPoliceCar.Interval := 25;
+  end;
+  if (Form4.ImgClickNormalOn.Visible = true) and
+    (Form4.ImgClickEasyOn.Visible = false) and
+    (Form4.ImgClickHardOn.Visible = false) then
+  begin
+    Form1.TimerRoad.Interval := 20;
+    Form1.TimerCarRed.Interval := 20;
+    Form1.TimerCarRedFast.Interval := 20;
+    Form1.TimerCarBlue.Interval := 20;
+    Form1.TimerPoliceCar.Interval := 20;
+  end;
+  if (Form4.ImgClickHardOn.Visible = true) and
+    (Form4.ImgClickEasyOn.Visible = false) and
+    (Form4.ImgClickNormalOn.Visible = false) then
+  begin
+    Form1.TimerRoad.Interval := 15;
+    Form1.TimerCarRed.Interval := 15;
+    Form1.TimerCarRedFast.Interval := 15;
+    Form1.TimerCarBlue.Interval := 15;
+    Form1.TimerPoliceCar.Interval := 15;
+  end;
+end;
+
+procedure TForm4.ImageGarageClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  Form5.Show;
+  Form4.Hide;
+end;
+
+procedure TForm4.ImgChangeUserClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  Form9.Show;
+  Form9.EditLog.Clear;
+  Form9.EditPas.Clear;
+  Form4.Close;
+end;
+
+procedure TForm4.ImgClickEasyOffClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  ImgClickEasyOff.Visible := false;
+  ImgClickEasyOn.Visible := true;
+  if ImgClickEasyOn.Visible = true then
+  begin
+    ImgClickNormalOn.Visible := false;
+    ImgClickNormalOff.Visible := true;
+    ImgClickHardOn.Visible := false;
+    ImgClickHardOff.Visible := true;
+  end;
+end;
+
+procedure TForm4.ImgClickNormalOffClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  ImgClickNormalOff.Visible := false;
+  ImgClickNormalOn.Visible := true;
+  if ImgClickNormalOn.Visible = true then
+  begin
+    ImgClickEasyOn.Visible := false;
+    ImgClickEasyOff.Visible := true;
+    ImgClickHardOn.Visible := false;
+    ImgClickHardOff.Visible := true;
+  end;
+end;
+
+procedure TForm4.ImgClickHardOffClick(Sender: TObject);
+begin
+  sndPlaySound('Music\SoundClick.wav', SND_NODEFAULT Or SND_ASYNC);
+  ImgClickHardOff.Visible := false;
+  ImgClickHardOn.Visible := true;
+  if ImgClickHardOn.Visible = true then
+  begin
+    ImgClickNormalOn.Visible := false;
+    ImgClickNormalOff.Visible := true;
+    ImgClickEasyOn.Visible := false;
+    ImgClickEasyOff.Visible := true;
+  end;
+end;
+
+procedure TForm4.Timer1Timer(Sender: TObject);
+begin
+  if n = true then
+  begin
+    ImgPoliceCar.Top := ImgPoliceCar.Top - 2;
+    ImgFlasher.Visible := true;
+    ImgFlasher.Top := ImgFlasher.Top - 2;
+    ImgDirtLeft.Visible := true;
+    ImgDirtRight.Visible := true;
+    ImgAntenna1.Visible := true;
+    ImgAntenna2.Visible := false;
+    n := false;
+  end
+  else
+  begin
+    ImgPoliceCar.Top := ImgPoliceCar.Top + 2;
+    ImgFlasher.Visible := false;
+    ImgFlasher.Top := ImgFlasher.Top + 2;
+    ImgDirtLeft.Visible := false;
+    ImgDirtRight.Visible := false;
+    ImgAntenna1.Visible := false;
+    ImgAntenna2.Visible := true;
+    n := true;
+  end;
+end;
+
+procedure TForm4.Timer2Timer(Sender: TObject);
+begin
+  inc(k);
+  if k = 1 then
+  begin
+    ImgCoin.Picture.LoadFromFile('Images\ImgCoin-1.png');
+  end;
+
+  if k = 2 then
+  begin
+    ImgCoin.Picture.LoadFromFile('Images\ImgCoin-2.png');
+  end;
+
+  if k = 3 then
+  begin
+    ImgCoin.Picture.LoadFromFile('Images\ImgCoin-3.png');
+  end;
+
+  if k = 4 then
+  begin
+    ImgCoin.Picture.LoadFromFile('Images\ImgCoin-4.png');
+  end;
+
+  if k = 5 then
+  begin
+    ImgCoin.Picture.LoadFromFile('Images\ImgCoin-5.png');
+  end;
+
+  if k = 6 then
+  begin
+    ImgCoin.Picture.LoadFromFile('Images\ImgCoin-1.png');
+    k := 0;
+  end;
+
+  if k > 6 then
+  begin
+    k := 0;
+  end;
+
+  if MusicPlayMenu = true then
+  begin
+    MusicPlayMenu := false;
+    MediaPlayer1.FileName := 'Music\MenuMusic.mp3';
+    MediaPlayer1.Open;
+    Form1.MediaPlayer1.FileName := 'Music\GameMusic.mp3';
+    Form1.MediaPlayer1.Open;
+  end;
+end;
+
+end.

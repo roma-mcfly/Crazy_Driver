@@ -1,0 +1,145 @@
+unit Unit6;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Imaging.pngimage, Vcl.ExtCtrls,
+  Vcl.StdCtrls;
+
+type
+  TForm6 = class(TForm)
+    ImageBackGround: TImage;
+    LabelChoose: TLabel;
+    ImgMenu: TImage;
+    ImgGarage: TImage;
+    Image4: TImage;
+    Image5: TImage;
+    Image6: TImage;
+    ImageClick1On: TImage;
+    ImageClick2On: TImage;
+    ImageClick3On: TImage;
+    LabelYour: TLabel;
+    LabelLocation: TLabel;
+    ImageDesert: TImage;
+    ImageSavannah: TImage;
+    ImageBelarus: TImage;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    procedure ImgMenuClick(Sender: TObject);
+    procedure ImgGarageClick(Sender: TObject);
+    procedure Image4Click(Sender: TObject);
+    procedure ImageClick1OnClick(Sender: TObject);
+    procedure Image5Click(Sender: TObject);
+    procedure ImageClick2OnClick(Sender: TObject);
+    procedure Image6Click(Sender: TObject);
+    procedure ImageClick3OnClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form6: TForm6;
+
+implementation
+
+{$R *.dfm}
+
+uses Unit4, Unit5, Unit1;
+
+procedure TForm6.ImageClick3OnClick(Sender: TObject);
+begin
+  ImageSavannah.Visible := False;
+  ImageDesert.Visible := False;
+  ImageBelarus.Visible := False;
+  ImageClick3On.Visible := False;
+  Image6.Visible := True;
+end;
+
+procedure TForm6.ImgMenuClick(Sender: TObject);
+begin
+  Form4.Show;
+  Form6.Hide;
+end;
+
+procedure TForm6.ImgGarageClick(Sender: TObject);
+begin
+  Form5.Show;
+  Form6.Hide;
+end;
+
+procedure TForm6.Image4Click(Sender: TObject);
+begin
+  Image4.Visible := False;
+  ImageClick1On.Visible := True;
+  if ImageClick1On.Visible = True then
+  begin
+    ImageDesert.Visible := False;
+    ImageBelarus.Visible := False;
+    ImageSavannah.Visible := True;
+    ImageSavannah.Picture.LoadFromFile('savannah.png');
+    Image5.Visible := True;
+    ImageClick2On.Visible := False;
+    Image6.Visible := True;
+    ImageClick3On.Visible := False;
+  end;
+end;
+
+procedure TForm6.Image5Click(Sender: TObject);
+begin
+  Image5.Visible := False;
+  ImageClick2On.Visible := True;
+  if ImageClick2On.Visible = True then
+  begin
+    ImageSavannah.Visible := False;
+    ImageBelarus.Visible := False;
+    ImageDesert.Visible := True;
+    ImageDesert.Picture.LoadFromFile('desert.png');
+    ImageClick3On.Visible := False;
+    Image6.Visible := True;
+    ImageClick1On.Visible := False;
+    Image4.Visible := True;
+  end;
+end;
+
+procedure TForm6.Image6Click(Sender: TObject);
+begin
+  Image6.Visible := False;
+  ImageClick3On.Visible := True;
+  if ImageClick3On.Visible = True then
+  begin
+    ImageSavannah.Visible := False;
+    ImageDesert.Visible := False;
+    ImageBelarus.Visible := True;
+    ImageBelarus.Picture.LoadFromFile('belarus.png');
+    ImageClick2On.Visible := False;
+    Image5.Visible := True;
+    ImageClick1On.Visible := False;
+    Image4.Visible := True;
+  end;
+end;
+
+procedure TForm6.ImageClick1OnClick(Sender: TObject);
+begin
+  ImageSavannah.Visible := False;
+  ImageClick1On.Visible := False;
+  ImageDesert.Visible := False;
+  ImageBelarus.Visible := False;
+  Image4.Visible := True;
+
+end;
+
+procedure TForm6.ImageClick2OnClick(Sender: TObject);
+begin
+  ImageSavannah.Visible := False;
+  ImageBelarus.Visible := False;
+  ImageDesert.Visible := False;
+  ImageClick2On.Visible := False;
+  Image5.Visible := True;
+end;
+
+end.
