@@ -1,2 +1,2 @@
 # Crazy_Driver
- The project is an arcade game for Windows, created using the Delphi programming language.
+This project is an arcade game for Windows, created using the Delphi programming language.
